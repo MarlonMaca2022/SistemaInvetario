@@ -1,0 +1,120 @@
+[
+  {
+    "id": "MOV-001",
+    "tipo": "ENTRADA",
+    "productoId": "PROD-001",
+    "cantidad": 10,
+    "fechaMovimiento": "2026-02-14T14:30:00Z",
+    "razon": "COMPRA_PROVEEDOR",
+    "detalles": {
+      "proveedorOrdenId": "POR-0001",
+      "numeroComprobante": "FAC-2026-001",
+      "costo": 8000.00
+    },
+    "usuario": "juan.perez@empresa.com",
+    "notas": "Compra a proveedor Dell autorizado",
+    "estado": "COMPLETADO",
+    "geoLocalizacion": {
+      "almacen": "Almacén Principal",
+      "ubicacion": "Pasillo 3 - Estante A"
+    }
+  },
+  {
+    "id": "MOV-002",
+    "tipo": "SALIDA",
+    "productoId": "PROD-002",
+    "cantidad": 2,
+    "fechaMovimiento": "2026-02-13T11:15:00Z",
+    "razon": "VENTA_CLIENTE",
+    "detalles": {
+      "clienteOrdenId": "ORD-2026-155",
+      "numeroFactura": "INV-2026-045",
+      "precioVenta": 799.98
+    },
+    "usuario": "maria.garcia@empresa.com",
+    "notas": "Venta a cliente corporativo",
+    "estado": "COMPLETADO",
+    "geoLocalizacion": {
+      "almacen": "Almacén Principal",
+      "ubicacion": "Pasillo 1 - Mostrador"
+    }
+  },
+  {
+    "id": "MOV-003",
+    "tipo": "ENTRADA",
+    "productoId": "PROD-004",
+    "cantidad": 100,
+    "fechaMovimiento": "2026-02-12T08:45:00Z",
+    "razon": "COMPRA_PROVEEDOR",
+    "detalles": {
+      "proveedorOrdenId": "POR-0002",
+      "numeroComprobante": "FAC-2026-002",
+      "costo": 350.00
+    },
+    "usuario": "carlos.lopez@empresa.com",
+    "notas": "Reposición de papel de oficina",
+    "estado": "COMPLETADO",
+    "geoLocalizacion": {
+      "almacen": "Almacén Consumibles",
+      "ubicacion": "Pasillo 2"
+    }
+  },
+  {
+    "id": "MOV-004",
+    "tipo": "SALIDA",
+    "productoId": "PROD-003",
+    "cantidad": 5,
+    "fechaMovimiento": "2026-02-11T16:20:00Z",
+    "razon": "MUESTRA_COMERCIAL",
+    "detalles": {
+      "evento": "Tech Expo 2026",
+      "numeroAutorizacion": "AUTH-2026-08"
+    },
+    "usuario": "ana.martinez@empresa.com",
+    "notas": "Muestras para exposición comercial",
+    "estado": "COMPLETADO",
+    "geoLocalizacion": {
+      "almacen": "Almacén Showroom",
+      "ubicacion": "Sección Periféricos"
+    }
+  },
+  {
+    "id": "MOV-005",
+    "tipo": "ENTRADA",
+    "productoId": "PROD-005",
+    "cantidad": 3,
+    "fechaMovimiento": "2026-02-10T10:00:00Z",
+    "razon": "COMPRA_PROVEEDOR",
+    "detalles": {
+      "proveedorOrdenId": "POR-0003",
+      "numeroComprobante": "FAC-2026-003",
+      "costo": 540.00
+    },
+    "usuario": "juan.perez@empresa.com",
+    "notas": "Muebles para nueva sección de oficina",
+    "estado": "COMPLETADO",
+    "geoLocalizacion": {
+      "almacen": "Almacén Muebles",
+      "ubicacion": "Pasillo 1"
+    }
+  },
+  {
+    "id": "MOV-006",
+    "tipo": "AJUSTE",
+    "productoId": "PROD-001",
+    "cantidad": -2,
+    "fechaMovimiento": "2026-02-09T13:30:00Z",
+    "razon": "AJUSTE_INVENTARIO",
+    "detalles": {
+      "motivo": "Daño durante envío",
+      "numeroAutorizacion": "ADJ-2026-01"
+    },
+    "usuario": "luis.torres@empresa.com",
+    "notas": "Ajuste por mercancía dañada",
+    "estado": "COMPLETADO",
+    "geoLocalizacion": {
+      "almacen": "Almacén Principal",
+      "ubicacion": "Pasillo 3"
+    }
+  }
+]

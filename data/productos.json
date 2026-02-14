@@ -1,0 +1,164 @@
+[
+  {
+    "id": "PROD-001",
+    "codigo": "SKU-12345",
+    "nombre": "Laptop Dell XPS 15",
+    "descripcion": "Laptop de alta gama para diseñadores y desarrolladores",
+    "categoriaId": "CAT-001",
+    "precio": {
+      "precioCompra": 800.00,
+      "precioVenta": 1200.00,
+      "moneda": "USD"
+    },
+    "inventario": {
+      "cantidad": 25,
+      "minimo": 5,
+      "maximo": 100,
+      "ubicacion": "Almacén A - Pasillo 3"
+    },
+    "especificaciones": {
+      "marca": "Dell",
+      "modelo": "XPS15-2024",
+      "especificacionesTecnicas": "Intel Core i7, 16GB RAM, 512GB SSD, Pantalla 4K"
+    },
+    "estado": "ACTIVO",
+    "imagen": "laptop-dell-xps15.jpg",
+    "fechaCreacion": "2026-02-10T08:00:00Z",
+    "modificadoEn": "2026-02-14T10:30:00Z"
+  },
+  {
+    "id": "PROD-002",
+    "codigo": "SKU-67890",
+    "nombre": "Monitor LG 27 pulgadas",
+    "descripcion": "Monitor IPS 4K para estación de trabajo",
+    "categoriaId": "CAT-001",
+    "precio": {
+      "precioCompra": 250.00,
+      "precioVenta": 399.99,
+      "moneda": "USD"
+    },
+    "inventario": {
+      "cantidad": 45,
+      "minimo": 10,
+      "maximo": 150,
+      "ubicacion": "Almacén A - Pasillo 1"
+    },
+    "especificaciones": {
+      "marca": "LG",
+      "modelo": "27UP550",
+      "especificacionesTecnicas": "3840x2160, ProMotion 144Hz, USB-C"
+    },
+    "estado": "ACTIVO",
+    "imagen": "monitor-lg-27.jpg",
+    "fechaCreacion": "2026-02-08T09:15:00Z",
+    "modificadoEn": "2026-02-12T14:20:00Z"
+  },
+  {
+    "id": "PROD-003",
+    "codigo": "SKU-11111",
+    "nombre": "Teclado Mecánico RGB",
+    "descripcion": "Teclado gaming mecánico con retroiluminación RGB",
+    "categoriaId": "CAT-001",
+    "precio": {
+      "precioCompra": 60.00,
+      "precioVenta": 119.99,
+      "moneda": "USD"
+    },
+    "inventario": {
+      "cantidad": 120,
+      "minimo": 20,
+      "maximo": 300,
+      "ubicacion": "Almacén B - Estante 5"
+    },
+    "especificaciones": {
+      "marca": "Corsair",
+      "modelo": "K95 Platinum",
+      "especificacionesTecnicas": "Switches mecánicos, WiFi 2.4GHz, Batería 40h"
+    },
+    "estado": "ACTIVO",
+    "imagen": "teclado-corsair-k95.jpg",
+    "fechaCreacion": "2026-01-15T10:00:00Z",
+    "modificadoEn": "2026-02-14T08:00:00Z"
+  },
+  {
+    "id": "PROD-004",
+    "codigo": "SKU-22222",
+    "nombre": "Papel A4 (resma 500 hojas)",
+    "descripcion": "Papel blanco estándar 80 g/m² - 1 resma",
+    "categoriaId": "CAT-005",
+    "precio": {
+      "precioCompra": 3.50,
+      "precioVenta": 5.99,
+      "moneda": "USD"
+    },
+    "inventario": {
+      "cantidad": 500,
+      "minimo": 50,
+      "maximo": 1000,
+      "ubicacion": "Almacén C - Pasillo 2"
+    },
+    "especificaciones": {
+      "marca": "Hammermill",
+      "modelo": "Premium",
+      "especificacionesTecnicas": "80 g/m², Blanco brillante, 500 hojas"
+    },
+    "estado": "ACTIVO",
+    "imagen": "papel-a4-resma.jpg",
+    "fechaCreacion": "2026-01-20T11:30:00Z",
+    "modificadoEn": "2026-02-13T15:45:00Z"
+  },
+  {
+    "id": "PROD-005",
+    "codigo": "SKU-33333",
+    "nombre": "Silla Ergonómica Office",
+    "descripcion": "Silla de oficina ergonómica con soporte lumbar",
+    "categoriaId": "CAT-003",
+    "precio": {
+      "precioCompra": 180.00,
+      "precioVenta": 299.99,
+      "moneda": "USD"
+    },
+    "inventario": {
+      "cantidad": 12,
+      "minimo": 3,
+      "maximo": 50,
+      "ubicacion": "Almacén D - Pasillo 1"
+    },
+    "especificaciones": {
+      "marca": "Steelcase",
+      "modelo": "Leap v2",
+      "especificacionesTecnicas": "Altura ajustable, Tela respirable, Garantía 12 años"
+    },
+    "estado": "ACTIVO",
+    "imagen": "silla-steelcase-leap.jpg",
+    "fechaCreacion": "2026-02-01T09:00:00Z",
+    "modificadoEn": "2026-02-11T13:20:00Z"
+  },
+  {
+    "id": "PROD-006",
+    "codigo": "SKU-44444",
+    "nombre": "Adobe Creative Cloud Licencia Anual",
+    "descripcion": "Suscripción anual a Adobe Creative Cloud completo",
+    "categoriaId": "CAT-004",
+    "precio": {
+      "precioCompra": 480.00,
+      "precioVenta": 649.99,
+      "moneda": "USD"
+    },
+    "inventario": {
+      "cantidad": 30,
+      "minimo": 5,
+      "maximo": 100,
+      "ubicacion": "Almacén Digital"
+    },
+    "especificaciones": {
+      "marca": "Adobe",
+      "modelo": "CC 2024",
+      "especificacionesTecnicas": "Includes Photoshop, Premiere, Illustrator, InDesign, etc."
+    },
+    "estado": "ACTIVO",
+    "imagen": "adobe-cc-license.jpg",
+    "fechaCreacion": "2026-01-05T10:00:00Z",
+    "modificadoEn": "2026-02-14T09:15:00Z"
+  }
+]

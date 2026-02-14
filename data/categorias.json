@@ -1,0 +1,52 @@
+[
+  {
+    "id": "CAT-001",
+    "nombre": "Electrónica",
+    "descripcion": "Equipos y dispositivos electrónicos",
+    "icono": "🖥️",
+    "color": "#FF6B6B",
+    "activa": true,
+    "fechaCreacion": "2026-02-14T10:00:00Z",
+    "modificadoEn": "2026-02-14T10:00:00Z"
+  },
+  {
+    "id": "CAT-002",
+    "nombre": "Accesorios de Oficina",
+    "descripcion": "Artículos y accesorios para oficina",
+    "icono": "📎",
+    "color": "#4ECDC4",
+    "activa": true,
+    "fechaCreacion": "2026-02-14T10:05:00Z",
+    "modificadoEn": "2026-02-14T10:05:00Z"
+  },
+  {
+    "id": "CAT-003",
+    "nombre": "Muebles",
+    "descripcion": "Muebles y mobiliario de oficina",
+    "icono": "🪑",
+    "color": "#95E1D3",
+    "activa": true,
+    "fechaCreacion": "2026-02-14T10:10:00Z",
+    "modificadoEn": "2026-02-14T10:10:00Z"
+  },
+  {
+    "id": "CAT-004",
+    "nombre": "Software y Licencias",
+    "descripcion": "Programas y licencias de software",
+    "icono": "💾",
+    "color": "#FFE66D",
+    "activa": true,
+    "fechaCreacion": "2026-02-14T10:15:00Z",
+    "modificadoEn": "2026-02-14T10:15:00Z"
+  },
+  {
+    "id": "CAT-005",
+    "nombre": "Consumibles",
+    "descripcion": "Productos de consumo diario",
+    "icono": "📦",
+    "color": "#A8DADC",
+    "activa": true,
+    "fechaCreacion": "2026-02-14T10:20:00Z",
+    "modificadoEn": "2026-02-14T10:20:00Z"
+  }
+]

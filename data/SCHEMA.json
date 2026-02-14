@@ -1,0 +1,303 @@
+{
+  "DESCRIPCION_GENERAL": {
+    "nombre": "Sistema de Gestión de Inventarios Profesional",
+    "version": "1.0.0",
+    "tipo": "Frontend - JavaScript Vanilla",
+    "descripcion": "Esquema de datos para la gestión profesional de inventarios sin backend"
+  },
+
+  "CATEGORIA": {
+    "descripcion": "Define la estructura de categorías de productos",
+    "ejemplo": {
+      "id": "CAT-001",
+      "nombre": "Electrónica",
+      "descripcion": "Productos electrónicos en general",
+      "icono": "electronics",
+      "color": "#FF6B6B",
+      "activa": true,
+      "fechaCreacion": "2026-02-14T10:30:00Z",
+      "modificadoEn": "2026-02-14T10:30:00Z"
+    },
+    "propiedades": {
+      "id": {
+        "tipo": "string",
+        "formato": "CAT-XXX (auto-generado)",
+        "requerido": true,
+        "descripcion": "Identificador único de categoría"
+      },
+      "nombre": {
+        "tipo": "string",
+        "minimo": 3,
+        "maximo": 50,
+        "requerido": true,
+        "descripcion": "Nombre único de la categoría"
+      },
+      "descripcion": {
+        "tipo": "string",
+        "maximo": 500,
+        "requerido": false,
+        "descripcion": "Descripción detallada de la categoría"
+      },
+      "icono": {
+        "tipo": "string",
+        "requerido": false,
+        "descripcion": "Nombre del icono o emoji para la categoría"
+      },
+      "color": {
+        "tipo": "string",
+        "formato": "#RRGGBB",
+        "requerido": false,
+        "descripcion": "Color hexadecimal para identificación visual"
+      },
+      "activa": {
+        "tipo": "boolean",
+        "porDefecto": true,
+        "descripcion": "Indica si la categoría está activa"
+      },
+      "fechaCreacion": {
+        "tipo": "ISO8601",
+        "autoGenerado": true,
+        "descripcion": "Timestamp de creación"
+      },
+      "modificadoEn": {
+        "tipo": "ISO8601",
+        "autoGenerado": true,
+        "descripcion": "Timestamp de última modificación"
+      }
+    }
+  },
+
+  "PRODUCTO": {
+    "descripcion": "Define la estructura de productos del inventario",
+    "ejemplo": {
+      "id": "PROD-001",
+      "codigo": "SKU-12345",
+      "nombre": "Laptop Dell XPS 15",
+      "descripcion": "Laptop de alta gama para profesionales",
+      "categoriaId": "CAT-001",
+      "precio": {
+        "precioCompra": 800.00,
+        "precioVenta": 1200.00,
+        "moneda": "USD"
+      },
+      "inventario": {
+        "cantidad": 25,
+        "minimo": 5,
+        "maximo": 100,
+        "ubicacion": "Almacén A - Pasillo 3"
+      },
+      "especificaciones": {
+        "marca": "Dell",
+        "modelo": "XPS15-2024",
+        "especificacionesTecnicas": "Intel i7, 16GB RAM, 512GB SSD"
+      },
+      "estado": "ACTIVO",
+      "imagen": "laptop-dell-xps15.jpg",
+      "fechaCreacion": "2026-02-14T10:30:00Z",
+      "modificadoEn": "2026-02-14T10:30:00Z"
+    },
+    "propiedades": {
+      "id": {
+        "tipo": "string",
+        "formato": "PROD-XXX (auto-generado)",
+        "requerido": true,
+        "descripcion": "Identificador único del producto"
+      },
+      "codigo": {
+        "tipo": "string",
+        "formato": "SKU-XXXXX (único)",
+        "requerido": true,
+        "descripcion": "Código único SKU del producto"
+      },
+      "nombre": {
+        "tipo": "string",
+        "minimo": 3,
+        "maximo": 100,
+        "requerido": true,
+        "descripcion": "Nombre comercial del producto"
+      },
+      "descripcion": {
+        "tipo": "string",
+        "maximo": 1000,
+        "requerido": false,
+        "descripcion": "Descripción detallada del producto"
+      },
+      "categoriaId": {
+        "tipo": "string",
+        "formato": "CAT-XXX",
+        "requerido": true,
+        "descripcion": "Referencia a categoría (relación 1:N)"
+      },
+      "precio": {
+        "tipo": "objeto",
+        "requerido": true,
+        "propiedades": {
+          "precioCompra": {"tipo": "number", "minimo": 0, "descripcion": "Precio de costo"},
+          "precioVenta": {"tipo": "number", "minimo": 0, "descripcion": "Precio de venta al público"},
+          "moneda": {"tipo": "string", "defecto": "USD", "descripcion": "Código de moneda ISO"}
+        }
+      },
+      "inventario": {
+        "tipo": "objeto",
+        "requerido": true,
+        "propiedades": {
+          "cantidad": {"tipo": "integer", "minimo": 0, "descripcion": "Stock actual"},
+          "minimo": {"tipo": "integer", "minimo": 0, "descripcion": "Stock mínimo permitido"},
+          "maximo": {"tipo": "integer", "minimo": 0, "descripcion": "Stock máximo permitido"},
+          "ubicacion": {"tipo": "string", "descripcion": "Ubicación física en almacén"}
+        }
+      },
+      "especificaciones": {
+        "tipo": "objeto",
+        "requerido": false,
+        "propiedades": {
+          "marca": {"tipo": "string"},
+          "modelo": {"tipo": "string"},
+          "especificacionesTecnicas": {"tipo": "string"}
+        }
+      },
+      "estado": {
+        "tipo": "enum",
+        "valores": ["ACTIVO", "INACTIVO", "DESCONTINUADO"],
+        "defecto": "ACTIVO",
+        "descripcion": "Estado del producto"
+      },
+      "imagen": {
+        "tipo": "string",
+        "requerido": false,
+        "descripcion": "Nombre del archivo de imagen"
+      },
+      "fechaCreacion": {
+        "tipo": "ISO8601",
+        "autoGenerado": true
+      },
+      "modificadoEn": {
+        "tipo": "ISO8601",
+        "autoGenerado": true
+      }
+    }
+  },
+
+  "MOVIMIENTO": {
+    "descripcion": "Define la estructura de movimientos de inventario (Entrada/Salida)",
+    "ejemplo": {
+      "id": "MOV-001",
+      "tipo": "ENTRADA",
+      "productoId": "PROD-001",
+      "cantidad": 10,
+      "fechaMovimiento": "2026-02-14T14:30:00Z",
+      "razon": "COMPRA_PROVEEDOR",
+      "detalles": {
+        "proveedorOrdenId": "POR-0001",
+        "numeroComprobante": "FAC-2026-001",
+        "costo": 8000.00
+      },
+      "usuario": "juan.perez@empresa.com",
+      "notas": "Compra a proveedor autorizado",
+      "estado": "COMPLETADO",
+      "geoLocalizacion": {
+        "almacen": "Almacén Principal",
+        "ubicacion": "Pasillo 3 - Estante A"
+      }
+    },
+    "tipos": ["ENTRADA", "SALIDA"],
+    "razonesEntrada": [
+      "COMPRA_PROVEEDOR",
+      "DEVOLUCION_CLIENTE",
+      "AJUSTE_INVENTARIO",
+      "TRANSFERENCIA_ENTRADA",
+      "RECEPCION_INICIAL"
+    ],
+    "razonesSalida": [
+      "VENTA_CLIENTE",
+      "DEVOLUCION_PROVEEDOR",
+      "AJUSTE_INVENTARIO",
+      "TRANSFERENCIA_SALIDA",
+      "MERMA_DETERIORO",
+      "MUESTRA_COMERCIAL"
+    ],
+    "propiedades": {
+      "id": {
+        "tipo": "string",
+        "formato": "MOV-XXX (auto-generado)",
+        "requerido": true,
+        "descripcion": "Identificador único del movimiento"
+      },
+      "tipo": {
+        "tipo": "enum",
+        "valores": ["ENTRADA", "SALIDA"],
+        "requerido": true,
+        "descripcion": "Tipo de movimiento"
+      },
+      "productoId": {
+        "tipo": "string",
+        "formato": "PROD-XXX",
+        "requerido": true,
+        "descripcion": "Referencia al producto movido"
+      },
+      "cantidad": {
+        "tipo": "integer",
+        "minimo": 1,
+        "requerido": true,
+        "descripcion": "Cantidad movida (siempre positiva)"
+      },
+      "fechaMovimiento": {
+        "tipo": "ISO8601",
+        "requerido": true,
+        "descripcion": "Fecha y hora del movimiento"
+      },
+      "razon": {
+        "tipo": "enum",
+        "valores": "Ver arrays razonesEntrada y razonesSalida",
+        "requerido": true,
+        "descripcion": "Motivo del movimiento"
+      },
+      "detalles": {
+        "tipo": "objeto",
+        "requerido": false,
+        "descripcion": "Información adicional según tipo de movimiento"
+      },
+      "usuario": {
+        "tipo": "string",
+        "requerido": true,
+        "descripcion": "Email del usuario que realizó el movimiento"
+      },
+      "notas": {
+        "tipo": "string",
+        "maximo": 500,
+        "requerido": false,
+        "descripcion": "Anotaciones adicionales"
+      },
+      "estado": {
+        "tipo": "enum",
+        "valores": ["PENDIENTE", "COMPLETADO", "CANCELADO"],
+        "defecto": "COMPLETADO",
+        "descripcion": "Estado del movimiento"
+      },
+      "geoLocalizacion": {
+        "tipo": "objeto",
+        "requerido": false,
+        "propiedades": {
+          "almacen": {"tipo": "string"},
+          "ubicacion": {"tipo": "string"}
+        }
+      }
+    }
+  },
+
+  "RESTRICCIONES_NEGOCIO": {
+    "validaciones": [
+      "Stock no puede ser negativo",
+      "Precio de venta debe ser mayor al precio de compra",
+      "Cantidad de movimiento debe ser positiva",
+      "Producto debe tener categoría asignada",
+      "Código de producto debe ser único",
+      "Razon de movimiento debe coincidir con tipo"
+    ],
+    "auditoria": [
+      "Todos los movimientos se registran automáticamente",
+      "Se mantiene historial completo de cambios",
+      "Cada operación tiene timestamp y usuario"
+    ]
+  }
+}
