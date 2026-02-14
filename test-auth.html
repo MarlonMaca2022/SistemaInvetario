@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - Sistema de Autenticación</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto p-8">
+        <h1 class="text-3xl font-bold mb-8">🧪 Test de Autenticación</h1>
+        
+        <div id="testResults" class="space-y-4">
+            <div id="testLoading" class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                <p class="text-blue-600">⏳ Realizando pruebas...</p>
+            </div>
+        </div>
+
+        <div class="mt-8 bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-bold mb-4">📋 Estado del Sistema</h2>
+            <pre id="statusLog" class="bg-gray-100 p-4 rounded text-xs overflow-auto" style="max-height: 400px;"></pre>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+
+    <script>
+        // Log personalizado
+        const logs = [];
+        const originalLog = console.log;
+        const originalError = console.error;
+
+        console.log = function(...args) {
+            logs.push({ type: 'log', args, time: new Date().toLocaleTimeString() });
+            originalLog.apply(console, args);
+        };
+
+        console.error = function(...args) {
+            logs.push({ type: 'error', args, time: new Date().toLocaleTimeString() });
+            originalError.apply(console, args);
+        };
+
+        // Ejecutar tests
+        document.addEventListener('DOMContentLoaded', () => {
+            const testsDiv = document.getElementById('testResults');
+            testsDiv.innerHTML = ''; // Limpiar
+
+            const tests = [
+                {
+                    name: 'authManager definido',
+                    check: () => typeof authManager !== 'undefined'
+                },
+                {
+                    name: 'authManager.estaAutenticado() es una función',
+                    check: () => typeof authManager.estaAutenticado === 'function'
+                },
+                {
+                    name: 'Sesión inicial (sin login)',
+                    check: () => !authManager.estaAutenticado()
+                },
+                {
+                    name: 'Usuarios demo disponibles',
+                    check: () => authManager.USUARIOS.admin && authManager.USUARIOS.empleado
+                },
+                {
+                    name: 'Matriz de permisos disponible',
+                    check: () => authManager.PERMISOS.ADMINISTRADOR && authManager.PERMISOS.EMPLEADO
+                },
+                {
+                    name: 'dataManager definido',
+                    check: () => typeof dataManager !== 'undefined'
+                },
+                {
+                    name: 'uiManager definido',
+                    check: () => typeof uiManager !== 'undefined'
+                },
+                {
+                    name: 'app definido',
+                    check: () => typeof app !== 'undefined'
+                },
+                {
+                    name: 'Login con admin válido',
+                    check: () => {
+                        const result = authManager.login('admin', 'admin123');
+                        const success = result.success;
+                        // Logout para tests siguientes
+                        if (success) authManager.logout();
+                        return success;
+                    }
+                },
+                {
+                    name: 'Login con empleado válido',
+                    check: () => {
+                        const result = authManager.login('empleado', 'emp123');
+                        const success = result.success;
+                        if (success) authManager.logout();
+                        return success;
+                    }
+                },
+                {
+                    name: 'Login con credenciales inválidas falla',
+                    check: () => {
+                        const result = authManager.login('usuario', 'contraseña');
+                        return !result.success;
+                    }
+                }
+            ];
+
+            // Ejecutar tests
+            tests.forEach((test, idx) => {
+                try {
+                    const passed = test.check();
+                    const status = passed ? '✅' : '❌';
+                    const result = document.createElement('div');
+                    result.className = `rounded-lg p-4 ${passed ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}`;
+                    result.innerHTML = `<p class="${passed ? 'text-green-600' : 'text-red-600'}">${status} ${test.name}</p>`;
+                    testsDiv.appendChild(result);
+                } catch (error) {
+                    const result = document.createElement('div');
+                    result.className = 'bg-red-50 border border-red-200 rounded-lg p-4';
+                    result.innerHTML = `<p class="text-red-600">❌ ${test.name}</p><p class="text-red-500 text-xs mt-2">${error.message}</p>`;
+                    testsDiv.appendChild(result);
+                }
+            });
+
+            // Mostrar logs
+            setTimeout(() => {
+                const statusDiv = document.getElementById('statusLog');
+                statusDiv.textContent = `[${new Date().toLocaleTimeString()}] Tests completados\n\n=== LOGS CAPTURADOS ===\n` + logs.map(l => `[${l.type.toUpperCase()}] ${l.time} ${l.args.join(' ')}`).join('\n');
+            }, 500);
+        });
+    </script>
+</body>
+</html>

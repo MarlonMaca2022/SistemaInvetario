@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sistema de Gestión de Inventarios Profesional - Frontend con Tailwind CSS">
+    <meta name="author" content="Arquitecto de Software Senior">
+    <title>InventarioPRO | Sistema de Gestión de Inventarios</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js para gráficos -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    
+    <style>
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes pulse-subtle {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .animate-slide-in { animation: slideIn 0.3s ease-out; }
+        .animate-fade-in { animation: fadeIn 0.3s ease-out; }
+        .animate-pulse-subtle { animation: pulse-subtle 2s ease-in-out infinite; }
+        
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .gradient-accent {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 0.375rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .status-active {
+            background-color: #dcfce7;
+            color: #15803d;
+        }
+        
+        .status-warning {
+            background-color: #fef3c7;
+            color: #b45309;
+        }
+        
+        .status-danger {
+            background-color: #fee2e2;
+            color: #dc2626;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100">
+    
+    <!-- TOP NAVIGATION BAR -->
+    <header class="sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo y nombre -->
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center justify-center w-10 h-10 gradient-accent rounded-lg">
+                        <i class="fas fa-boxes text-white text-lg"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-900">InventarioPRO</h1>
+                        <p class="text-xs text-gray-500">v1.0.0</p>
+                    </div>
+                </div>
+                
+                <!-- Navigation Center -->
+                <nav class="hidden md:flex items-center gap-8">
+                    <a href="#" class="nav-link flex items-center gap-2 text-gray-700 hover:text-blue-600 font-medium transition" data-section="dashboard">
+                        <i class="fas fa-chart-line"></i> Dashboard
+                    </a>
+                    <a href="#" class="nav-link flex items-center gap-2 text-gray-700 hover:text-blue-600 font-medium transition" data-section="productos">
+                        <i class="fas fa-boxes"></i> Productos
+                    </a>
+                    <a href="#" class="nav-link flex items-center gap-2 text-gray-700 hover:text-blue-600 font-medium transition" data-section="movimientos">
+                        <i class="fas fa-exchange-alt"></i> Movimientos
+                    </a>
+                </nav>
+                
+                <!-- Right side buttons -->
+                <div class="flex items-center gap-4">
+                    <!-- User role badge -->
+                    <div class="flex items-center gap-2 px-3 py-2 bg-blue-50 text-blue-700 rounded-lg text-sm font-medium">
+                        <i class="fas fa-crown"></i>
+                        <span id="userRole">Administrador</span>
+                    </div>
+                    
+                    <!-- User menu -->
+                    <div class="relative group">
+                        <button class="flex items-center gap-2 text-gray-700 hover:text-blue-600 transition">
+                            <i class="fas fa-user-circle text-2xl text-gray-400"></i>
+                        </button>
+                        <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition invisible group-hover:visible">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded-t-lg border-b">
+                                <i class="fas fa-user mr-2"></i> Perfil
+                            </a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">
+                                <i class="fas fa-cog mr-2"></i> Configuración
+                            </a>
+                            <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-b-lg">
+                                <i class="fas fa-sign-out-alt mr-2"></i> Salir
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Mobile menu toggle -->
+                    <button id="mobileMenuToggle" class="md:hidden text-gray-700 hover:text-blue-600">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <div class="flex">
+        <!-- SIDEBAR - Panel lateral (hidden en móvil) -->
+        <aside id="sidebar" class="hidden md:block w-64 bg-white border-r border-gray-200 min-h-screen shadow-sm animate-slide-in">
+            <div class="p-6">
+                <h2 class="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
+                    <i class="fas fa-bars text-blue-600"></i> Menú Principal
+                </h2>
+                
+                <nav class="space-y-2">
+                    <a href="#" class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition active" data-section="dashboard">
+                        <i class="fas fa-chart-line w-5 text-center"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="#" class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition" data-section="productos">
+                        <i class="fas fa-boxes w-5 text-center"></i>
+                        <span>Productos</span>
+                    </a>
+                    <a href="#" class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition" data-section="categorias">
+                        <i class="fas fa-folder w-5 text-center"></i>
+                        <span>Categorías</span>
+                    </a>
+                    <a href="#" class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition" data-section="movimientos">
+                        <i class="fas fa-exchange-alt w-5 text-center"></i>
+                        <span>Movimientos</span>
+                    </a>
+                    <a href="#" class="sidebar-link flex items-center gap-3 px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition" data-section="reportes">
+                        <i class="fas fa-chart-bar w-5 text-center"></i>
+                        <span>Reportes</span>
+                    </a>
+                </nav>
+                
+                <div class="border-t border-gray-200 my-6 pt-6 space-y-2">
+                    <button id="btnExport" class="w-full flex items-center gap-3 px-4 py-3 text-green-600 rounded-lg hover:bg-green-50 transition">
+                        <i class="fas fa-download w-5 text-center"></i>
+                        <span>Exportar Datos</span>
+                    </button>
+                    <button id="btnImport" class="w-full flex items-center gap-3 px-4 py-3 text-purple-600 rounded-lg hover:bg-purple-50 transition">
+                        <i class="fas fa-upload w-5 text-center"></i>
+                        <span>Importar Datos</span>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="flex-1 overflow-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                
+                <!-- DASHBOARD SECTION -->
+                <section id="dashboard" class="page-section animate-fade-in">
+                    <!-- Header with title and action -->
+                    <div class="mb-8">
+                        <div class="flex justify-between items-center mb-6">
+                            <div>
+                                <h2 class="text-3xl font-bold text-gray-900">Dashboard</h2>
+                                <p class="text-gray-500 mt-2">Resumen del estado de tu inventario</p>
+                            </div>
+                            <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium shadow-md hover:shadow-lg transition flex items-center gap-2">
+                                <i class="fas fa-refresh"></i> Actualizar
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- STATS GRID -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <!-- Card 1: Productos Totales -->
+                        <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition p-6 border-l-4 border-blue-500">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-500 text-sm font-medium">Productos Totales</p>
+                                    <p class="text-3xl font-bold text-gray-900 mt-2" id="statProductos">0</p>
+                                    <p class="text-xs text-gray-400 mt-2">
+                                        <i class="fas fa-arrow-up text-green-500"></i> 5% desde el mes anterior
+                                    </p>
+                                </div>
+                                <div class="text-4xl text-blue-100">
+                                    <i class="fas fa-boxes"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Categorías -->
+                        <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition p-6 border-l-4 border-green-500">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-500 text-sm font-medium">Categorías</p>
+                                    <p class="text-3xl font-bold text-gray-900 mt-2" id="statCategorias">0</p>
+                                    <p class="text-xs text-gray-400 mt-2">
+                                        <i class="fas fa-arrow-up text-green-500"></i> Activas
+                                    </p>
+                                </div>
+                                <div class="text-4xl text-green-100">
+                                    <i class="fas fa-folder"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 3: Valor del Inventario -->
+                        <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition p-6 border-l-4 border-purple-500">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-500 text-sm font-medium">Valor del Inventario</p>
+                                    <p class="text-3xl font-bold text-gray-900 mt-2" id="statValor">$0.00</p>
+                                    <p class="text-xs text-gray-400 mt-2">
+                                        <i class="fas fa-chart-line text-blue-500"></i> Acumulado
+                                    </p>
+                                </div>
+                                <div class="text-4xl text-purple-100">
+                                    <i class="fas fa-dollar-sign"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 4: Movimientos Hoy -->
+                        <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition p-6 border-l-4 border-orange-500">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-500 text-sm font-medium">Movimientos Hoy</p>
+                                    <p class="text-3xl font-bold text-gray-900 mt-2" id="statMovimientos">0</p>
+                                    <p class="text-xs text-gray-400 mt-2">
+                                        <i class="fas fa-clock text-orange-500"></i> En la última hora
+                                    </p>
+                                </div>
+                                <div class="text-4xl text-orange-100">
+                                    <i class="fas fa-exchange-alt"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TWO COLUMN LAYOUT -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Alertas de Stock (2/3 width) -->
+                        <div class="lg:col-span-2 bg-white rounded-lg shadow-md p-6">
+                            <div class="flex items-center justify-between mb-6">
+                                <h3 class="text-lg font-bold text-gray-900">
+                                    <i class="fas fa-exclamation-triangle text-orange-500 mr-2"></i>
+                                    Alertas de Stock
+                                </h3>
+                                <a href="#" class="text-blue-600 hover:text-blue-700 text-sm font-medium">Ver todos</a>
+                            </div>
+                            <div id="alertasContainer" class="space-y-3">
+                                <p class="text-gray-500 text-center py-8">
+                                    <i class="fas fa-spinner text-2xl animate-spin"></i>
+                                    <br> Cargando alertas...
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Últimos Movimientos (1/3 width) -->
+                        <div class="bg-white rounded-lg shadow-md p-6">
+                            <h3 class="text-lg font-bold text-gray-900 mb-6">
+                                <i class="fas fa-history text-blue-500 mr-2"></i>
+                                Últimos Movimientos
+                            </h3>
+                            <div id="movimientosRecientesContainer" class="space-y-3">
+                                <p class="text-gray-500 text-center py-8">
+                                    <i class="fas fa-spinner text-2xl animate-spin"></i>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- PRODUCTOS SECTION -->
+                <section id="productos" class="page-section hidden animate-fade-in">
+                    <div class="mb-8">
+                        <div class="flex justify-between items-center mb-6">
+                            <div>
+                                <h2 class="text-3xl font-bold text-gray-900">Gestión de Productos</h2>
+                                <p class="text-gray-500 mt-2">Administra el catálogo de productos</p>
+                            </div>
+                            <button id="btnNuevoProducto" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium shadow-md hover:shadow-lg transition flex items-center gap-2">
+                                <i class="fas fa-plus"></i> Nuevo Producto
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- FILTROS -->
+                    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Buscar</label>
+                                <input type="text" id="searchProductos" placeholder="Nombre, SKU o descripción..." 
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Categoría</label>
+                                <select id="filterCategoria" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                                    <option value="">Todas las categorías</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Estado</label>
+                                <select id="filterEstado" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                                    <option value="">Todos los estados</option>
+                                    <option value="ACTIVO">Activo</option>
+                                    <option value="INACTIVO">Inactivo</option>
+                                    <option value="DESCONTINUADO">Descontinuado</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TABLA DE PRODUCTOS -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-left text-gray-700" id="tablaProdutos">
+                                <thead class="bg-gray-100 border-b border-gray-200">
+                                    <tr>
+                                        <th class="px-6 py-3 font-semibold text-gray-900">ID</th>
+                                        <th class="px-6 py-3 font-semibold text-gray-900">SKU</th>
+                                        <th class="px-6 py-3 font-semibold text-gray-900">Nombre</th>
+                                        <th class="px-6 py-3 font-semibold text-gray-900">Categoría</th>
+                                        <th class="px-6 py-3 font-semibold text-gray-900">Precio</th>
+                                        <th class="px-6 py-3 font-semibold text-gray-900">Stock</th>
+                                        <th class="px-6 py-3 font-semibold text-gray-900">Estado</th>
+                                        <th class="px-6 py-3 font-semibold text-gray-900">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="productosTbody">
+                                    <tr class="border-b">
+                                        <td colspan="8" class="px-6 py-8 text-center text-gray-500">
+                                            <i class="fas fa-spinner text-2xl animate-spin"></i>
+                                            <p class="mt-2">Cargando productos...</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- CATEGORÍAS SECTION -->
+                <section id="categorias" class="page-section hidden animate-fade-in">
+                    <div class="mb-8">
+                        <div class="flex justify-between items-center mb-6">
+                            <div>
+                                <h2 class="text-3xl font-bold text-gray-900">Gestión de Categorías</h2>
+                                <p class="text-gray-500 mt-2">Organiza tus productos por categorías</p>
+                            </div>
+                            <button id="btnNuevaCategoria" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium shadow-md hover:shadow-lg transition flex items-center gap-2">
+                                <i class="fas fa-plus"></i> Nueva Categoría
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="categoriasContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <p class="col-span-full text-center text-gray-500 py-12">
+                            <i class="fas fa-spinner text-2xl animate-spin"></i>
+                            <br> Cargando categorías...
+                        </p>
+                    </div>
+                </section>
+
+                <!-- MOVIMIENTOS SECTION -->
+                <section id="movimientos" class="page-section hidden animate-fade-in">
+                    <div class="mb-8">
+                        <div>
+                            <h2 class="text-3xl font-bold text-gray-900">Registrar Movimiento</h2>
+                            <p class="text-gray-500 mt-2">Registra entradas y salidas de inventario</p>
+                        </div>
+                    </div>
+
+                    <!-- Formulario de movimiento -->
+                    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                        <form id="formMovimiento" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Tipo de Movimiento *</label>
+                                <select id="tipoMovimiento" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" required>
+                                    <option value="">Selecciona tipo...</option>
+                                    <option value="ENTRADA">📥 Entrada</option>
+                                    <option value="SALIDA">📤 Salida</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Producto *</label>
+                                <select id="productoMovimiento" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" required></select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Cantidad *</label>
+                                <input type="number" id="cantidadMovimiento" min="1" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Razón *</label>
+                                <select id="razonMovimiento" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" required></select>
+                            </div>
+                        </form>
+                        <div class="mt-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Notas (opcional)</label>
+                            <textarea id="notasMovimiento" rows="2" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"></textarea>
+                        </div>
+                        <button form="formMovimiento" type="submit" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition">
+                            <i class="fas fa-check mr-2"></i> Registrar Movimiento
+                        </button>
+                    </div>
+
+                    <!-- Historial de movimientos -->
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Historial de Movimientos</h3>
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-left text-gray-700" id="tablaMovimientos">
+                                <thead class="bg-gray-100 border-b border-gray-200">
+                                    <tr>
+                                        <th class="px-6 py-3 font-semibold text-gray-900">ID</th>
+                                        <th class="px-6 py-3 font-semibold text-gray-900">Tipo</th>
+                                        <th class="px-6 py-3 font-semibold text-gray-900">Producto</th>
+                                        <th class="px-6 py-3 font-semibold text-gray-900">Cantidad</th>
+                                        <th class="px-6 py-3 font-semibold text-gray-900">Fecha</th>
+                                        <th class="px-6 py-3 font-semibold text-gray-900">Razón</th>
+                                        <th class="px-6 py-3 font-semibold text-gray-900">Usuario</th>
+                                        <th class="px-6 py-3 font-semibold text-gray-900">Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="movimientosTbody">
+                                    <tr class="border-b">
+                                        <td colspan="8" class="px-6 py-8 text-center text-gray-500">
+                                            <i class="fas fa-spinner text-2xl animate-spin"></i>
+                                            <p class="mt-2">Cargando movimientos...</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- REPORTES SECTION -->
+                <section id="reportes" class="page-section hidden animate-fade-in">
+                    <div class="mb-8">
+                        <div class="flex justify-between items-center mb-6">
+                            <div>
+                                <h2 class="text-3xl font-bold text-gray-900">Reportes y Análisis</h2>
+                                <p class="text-gray-500 mt-2">Analiza el comportamiento de tu inventario</p>
+                            </div>
+                            <div class="flex gap-2">
+                                <button id="btnReportePDF" class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-medium transition flex items-center gap-2">
+                                    <i class="fas fa-file-pdf"></i> PDF
+                                </button>
+                                <button id="btnReporteExcel" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition flex items-center gap-2">
+                                    <i class="fas fa-file-excel"></i> Excel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tabs -->
+                    <div class="flex gap-4 mb-6 border-b border-gray-200">
+                        <button class="tab-button px-4 py-2 font-medium text-gray-700 border-b-2 border-blue-600 text-blue-600 active" data-tab="stock">
+                            <i class="fas fa-cubes mr-2"></i> Stock
+                        </button>
+                        <button class="tab-button px-4 py-2 font-medium text-gray-700 border-b-2 border-transparent hover:text-gray-900 transition" data-tab="movimientos">
+                            <i class="fas fa-exchange-alt mr-2"></i> Movimientos
+                        </button>
+                        <button class="tab-button px-4 py-2 font-medium text-gray-700 border-b-2 border-transparent hover:text-gray-900 transition" data-tab="rentabilidad">
+                            <i class="fas fa-chart-line mr-2"></i> Rentabilidad
+                        </button>
+                    </div>
+
+                    <!-- Tab Content -->
+                    <div id="stock" class="tab-content bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Stock por Categoría</h3>
+                        <div id="reporteStockContainer" class="text-center py-12 text-gray-500">
+                            <i class="fas fa-spinner text-2xl animate-spin"></i>
+                            <p class="mt-2">Cargando datos...</p>
+                        </div>
+                    </div>
+
+                    <div id="movimientos" class="tab-content hidden bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Movimientos por Período</h3>
+                        <div id="reporteMovimientosContainer" class="text-center py-12 text-gray-500">
+                            <i class="fas fa-spinner text-2xl animate-spin"></i>
+                            <p class="mt-2">Cargando datos...</p>
+                        </div>
+                    </div>
+
+                    <div id="rentabilidad" class="tab-content hidden bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Análisis de Rentabilidad</h3>
+                        <div id="reporteRentabilidadContainer" class="text-center py-12 text-gray-500">
+                            <i class="fas fa-spinner text-2xl animate-spin"></i>
+                            <p class="mt-2">Cargando datos...</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL - Nuevo Producto -->
+    <div id="modalProducto" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 animate-fade-in">
+        <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
+                <h2 id="modalProductoTitle" class="text-xl font-bold text-gray-900">Nuevo Producto</h2>
+                <button class="close text-gray-500 hover:text-gray-700 text-2xl">×</button>
+            </div>
+            
+            <form id="formProducto" class="p-6 space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Nombre *</label>
+                        <input type="text" id="productoNombre" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">SKU *</label>
+                        <input type="text" id="productoCodigo" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Categoría *</label>
+                        <select id="productoCategoria" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" required></select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Stock Inicial *</label>
+                        <input type="number" id="productoCantidad" min="0" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Precio Compra *</label>
+                        <input type="number" id="productoPrecioCompra" min="0" step="0.01" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Precio Venta *</label>
+                        <input type="number" id="productoPrecioVenta" min="0" step="0.01" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Stock Mínimo</label>
+                        <input type="number" id="productoMinimo" min="0" value="5" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Descripción</label>
+                    <textarea id="productoDescripcion" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"></textarea>
+                </div>
+                <div class="flex gap-4 pt-4 border-t border-gray-200">
+                    <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition">
+                        <i class="fas fa-save mr-2"></i> Guardar Producto
+                    </button>
+                    <button type="button" class="close flex-1 bg-gray-200 hover:bg-gray-300 text-gray-900 px-6 py-2 rounded-lg font-medium transition">
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL - Nueva Categoría -->
+    <div id="modalCategoria" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 animate-fade-in">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+            <div class="border-b border-gray-200 px-6 py-4 flex justify-between items-center">
+                <h2 class="text-xl font-bold text-gray-900">Nueva Categoría</h2>
+                <button class="close text-gray-500 hover:text-gray-700 text-2xl">×</button>
+            </div>
+            
+            <form id="formCategoria" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Nombre *</label>
+                    <input type="text" id="categoriaNombre" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Color</label>
+                    <input type="color" id="categoriaColor" value="#FF6B6B" class="w-full h-10 border border-gray-300 rounded-lg cursor-pointer">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Icono/Emoji</label>
+                    <input type="text" id="categoriaIcono" maxlength="2" value="📂" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="ej: 📂">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Descripción</label>
+                    <textarea id="categoriaDescripcion" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"></textarea>
+                </div>
+                <div class="flex gap-4 pt-4 border-t border-gray-200">
+                    <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition">
+                        <i class="fas fa-plus mr-2"></i> Crear Categoría
+                    </button>
+                    <button type="button" class="close flex-1 bg-gray-200 hover:bg-gray-300 text-gray-900 px-6 py-2 rounded-lg font-medium transition">
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="hidden fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg animate-fade-in z-50"></div>
+
+    <!-- Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

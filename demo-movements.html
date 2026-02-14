@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MovementManager - Demo Movimientos de Inventario</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .console-output {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            max-height: 500px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .console-success { color: #4ade80; }
+        .console-error { color: #f87171; }
+        .console-warn { color: #facc15; }
+        .console-info { color: #60a5fa; }
+        .demo-section {
+            border-left: 4px solid #3b82f6;
+            padding: 1rem;
+            background: #f0f9ff;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen py-8 px-4">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="mb-8">
+                <h1 class="text-4xl font-bold text-gray-900 mb-2">
+                    <i class="fas fa-exchange-alt mr-3 text-blue-600"></i>MovementManager - Movimientos de Inventario
+                </h1>
+                <p class="text-gray-600">Demo interactivo del sistema de control de stock con validaciones Early Return</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6 mb-8">
+                <!-- Left Column: Controls -->
+                <div class="md:col-span-1">
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h2 class="text-xl font-bold mb-4 text-gray-900">
+                            <i class="fas fa-cogs mr-2 text-gray-600"></i>Controles
+                        </h2>
+
+                        <!-- Inicialización -->
+                        <div class="demo-section">
+                            <h3 class="font-bold text-sm mb-3">Inicializar Demo</h3>
+                            <button onclick="inicializarDemo()" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mb-2">
+                                <i class="fas fa-play mr-2"></i>Iniciar
+                            </button>
+                            <button onclick="limpiarConsolaDemo()" class="w-full bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
+                                <i class="fas fa-eraser mr-2"></i>Limpiar Consola
+                            </button>
+                        </div>
+
+                        <!-- Entradas -->
+                        <div class="demo-section">
+                            <h3 class="font-bold text-sm mb-3">
+                                <i class="fas fa-arrow-down text-green-600 mr-2"></i>Entradas
+                            </h3>
+                            <button onclick="entradaCompraDemo()" class="w-full bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-3 rounded text-sm mb-2">
+                                <i class="fas fa-shopping-cart mr-1"></i>Compra Proveedor
+                            </button>
+                            <button onclick="entradaDevolucionDemo()" class="w-full bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-3 rounded text-sm">
+                                <i class="fas fa-undo mr-1"></i>Devolución Cliente
+                            </button>
+                        </div>
+
+                        <!-- Salidas -->
+                        <div class="demo-section">
+                            <h3 class="font-bold text-sm mb-3">
+                                <i class="fas fa-arrow-up text-red-600 mr-2"></i>Salidas
+                            </h3>
+                            <button onclick="salidaVentaDemo()" class="w-full bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-3 rounded text-sm mb-2">
+                                <i class="fas fa-dollar-sign mr-1"></i>Venta Cliente
+                            </button>
+                            <button onclick="salidaMermaDemo()" class="w-full bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-3 rounded text-sm">
+                                <i class="fas fa-exclamation-triangle mr-1"></i>Merma
+                            </button>
+                        </div>
+
+                        <!-- Validaciones -->
+                        <div class="demo-section">
+                            <h3 class="font-bold text-sm mb-3">
+                                <i class="fas fa-check-circle text-orange-600 mr-2"></i>Validaciones
+                            </h3>
+                            <button onclick="testSinStock()" class="w-full bg-orange-400 hover:bg-orange-500 text-white font-bold py-2 px-3 rounded text-sm mb-2">
+                                <i class="fas fa-ban mr-1"></i>Venta Sin Stock
+                            </button>
+                            <button onclick="testValidacionRazon()" class="w-full bg-orange-400 hover:bg-orange-500 text-white font-bold py-2 px-3 rounded text-sm">
+                                <i class="fas fa-ban mr-1"></i>Razón Inválida
+                            </button>
+                        </div>
+
+                        <!-- Análisis -->
+                        <div class="demo-section">
+                            <h3 class="font-bold text-sm mb-3">
+                                <i class="fas fa-chart-bar text-purple-600 mr-2"></i>Análisis
+                            </h3>
+                            <button onclick="verEstadisticasDemo()" class="w-full bg-purple-400 hover:bg-purple-500 text-white font-bold py-2 px-3 rounded text-sm mb-2">
+                                <i class="fas fa-chart-line mr-1"></i>Estadísticas
+                            </button>
+                            <button onclick="verHistorialDemo()" class="w-full bg-purple-400 hover:bg-purple-500 text-white font-bold py-2 px-3 rounded text-sm">
+                                <i class="fas fa-history mr-1"></i>Historial
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Console -->
+                <div class="md:col-span-2">
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h2 class="text-xl font-bold mb-4 text-gray-900">
+                            <i class="fas fa-terminal mr-2 text-gray-600"></i>Consola
+                        </h2>
+                        <div id="consoleOutput" class="console-output">
+                            <span class="console-info">[Consola lista. Haz clic en los botones para ejecutar demos.]</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Documentation -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+                <h2 class="text-2xl font-bold mb-4">
+                    <i class="fas fa-book mr-2 text-blue-600"></i>Documentación
+                </h2>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-lg font-bold mb-3 text-blue-600">Pattern: Early Return</h3>
+                        <p class="text-gray-700 mb-3">
+                            El sistema valida con "Early Return" - detiene la ejecución tan pronto como encuentra un error:
+                        </p>
+                        <ol class="list-decimal list-inside space-y-2 text-sm text-gray-600">
+                            <li>✓ Producto existe</li>
+                            <li>✓ Cantidad > 0</li>
+                            <li>✓ Razón válida</li>
+                            <li class="font-bold text-red-600">🔴 (CRÍTICO) Stock disponible?</li>
+                            <li>✓ Usuario especificado</li>
+                            <li>✓ Procesar movimiento</li>
+                        </ol>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-bold mb-3 text-blue-600">Flujo de Movimiento</h3>
+                        <div class="bg-blue-50 rounded p-3 text-sm space-y-2">
+                            <div class="flex items-center">
+                                <span class="bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs mr-2">1</span>
+                                <span>Registrar movimiento</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs mr-2">2</span>
+                                <span>Validar con Early Return</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="bg-orange-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs mr-2">3</span>
+                                <span>Actualizar ProductManager</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="bg-purple-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs mr-2">4</span>
+                                <span>Registrar en auditoría</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs mr-2">5</span>
+                                <span>Guardar en localStorage</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Reference -->
+            <div class="bg-blue-50 rounded-lg p-6 border-l-4 border-blue-600">
+                <h3 class="text-lg font-bold mb-3 text-blue-900">
+                    <i class="fas fa-lightbulb mr-2"></i>Referencia Rápida
+                </h3>
+                <div class="grid md:grid-cols-2 gap-4 text-sm">
+                    <div>
+                        <p class="font-bold text-blue-900 mb-2">Razones de Entrada:</p>
+                        <code class="bg-white p-2 rounded text-xs block">COMPRA_PROVEEDOR | DEVOLUCION_CLIENTE | AJUSTE_INVENTARIO</code>
+                    </div>
+                    <div>
+                        <p class="font-bold text-blue-900 mb-2">Razones de Salida:</p>
+                        <code class="bg-white p-2 rounded text-xs block">VENTA_CLIENTE | DEVOLUCION_PROVEEDOR | MERMA_DETERIORO</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Referencia a consola
+        const consoleElement = document.getElementById('consoleOutput');
+        let logCount = 0;
+        const MAX_LOGS = 500;
+
+        /**
+         * Log a la consola HTML
+         */
+        function log(mensaje, tipo = 'info') {
+            const clase = `console-${tipo}`;
+            const timestamp = new Date().toLocaleTimeString();
+            const linea = `[${timestamp}] [${tipo.toUpperCase()}] ${mensaje}\n`;
+            
+            consoleElement.innerHTML += `<span class="${clase}">${linea}</span>`;
+            consoleElement.scrollTop = consoleElement.scrollHeight;
+            
+            logCount++;
+            if (logCount > MAX_LOGS) {
+                consoleElement.innerHTML = consoleElement.innerHTML.substring(
+                    consoleElement.innerHTML.indexOf('\n') + 1
+                );
+                logCount--;
+            }
+        }
+
+        /**
+         * Inicializar Demo
+         */
+        function inicializarDemo() {
+            log('=== Inicializando Demo ===', 'info');
+            
+            // Crear producto
+            try {
+                const producto = productManager.crearProducto({
+                    nombre: 'Laptop HP 15" (Demo)',
+                    codigo: 'DEMO-HP-' + Math.random().toString(36).substr(2, 5),
+                    categoriaId: 'CAT-001',
+                    precioCompra: 500,
+                    precioVenta: 850,
+                    cantidad: 50,
+                    minimo: 5
+                });
+
+                log(`✓ Producto creado: ${producto.nombre}`, 'success');
+                log(`  ID: ${producto.id} | Código: ${producto.codigo}`, 'info');
+                log(`  Stock inicial: ${producto.inventario.cantidad} unidades`, 'info');
+                log('', 'info');
+                log('Demo lista. Ejecuta operaciones de entrada/salida.', 'success');
+            } catch (error) {
+                log(`✗ Error: ${error.message}`, 'error');
+            }
+
+            log('---', 'info');
+        }
+
+        /**
+         * ENTRADA: Compra a Proveedor
+         */
+        function entradaCompraDemo() {
+            log('=== Entrada: Compra a Proveedor ===', 'info');
+            
+            try {
+                const productos = productManager.obtenerProductos();
+                if (productos.length === 0) {
+                    log('⚠ No hay productos. Ejecuta "Iniciar" primero.', 'warn');
+                    return;
+                }
+
+                const entrada = movementManager.registrarEntrada({
+                    productoId: productos[0].id,
+                    cantidad: 25,
+                    razon: 'COMPRA_PROVEEDOR',
+                    usuario: 'gerente_almacen',
+                    referencia: {
+                        factura: 'FAC-2024-' + Math.floor(Math.random() * 9000 + 1000),
+                        proveedor: 'Tech Solutions Inc'
+                    }
+                });
+
+                log(`✓ Entrada registrada exitosamente`, 'success');
+                log(`  ID: ${entrada.id}`, 'info');
+                log(`  Producto: ${productos[0].nombre}`, 'info');
+                log(`  Cantidad: +${entrada.cantidad} unidades`, 'info');
+                log(`  Nuevo stock: ${productManager.obtenerProductoPorId(productos[0].id).inventario.cantidad}`, 'success');
+            } catch (error) {
+                log(`✗ Error: ${error.message}`, 'error');
+            }
+
+            log('---', 'info');
+        }
+
+        /**
+         * ENTRADA: Devolución de Cliente
+         */
+        function entradaDevolucionDemo() {
+            log('=== Entrada: Devolución de Cliente ===', 'info');
+            
+            try {
+                const productos = productManager.obtenerProductos();
+                if (productos.length === 0) {
+                    log('⚠ No hay productos.', 'warn');
+                    return;
+                }
+
+                const entrada = movementManager.registrarEntrada({
+                    productoId: productos[0].id,
+                    cantidad: 2,
+                    razon: 'DEVOLUCION_CLIENTE',
+                    usuario: 'servicio_cliente',
+                    detalles: 'Cliente devuelve unidades defectuosas'
+                });
+
+                log(`✓ Devolución registrada`, 'success');
+                log(`  Producto: ${productos[0].nombre}`, 'info');
+                log(`  Cantidad: +${entrada.cantidad} unidades`, 'info');
+                log(`  Nuevo stock: ${productManager.obtenerProductoPorId(productos[0].id).inventario.cantidad}`, 'success');
+            } catch (error) {
+                log(`✗ Error: ${error.message}`, 'error');
+            }
+
+            log('---', 'info');
+        }
+
+        /**
+         * SALIDA: Venta a Cliente (con validación Early Return)
+         */
+        function salidaVentaDemo() {
+            log('=== Salida: Venta a Cliente ===', 'info');
+            
+            try {
+                const productos = productManager.obtenerProductos();
+                if (productos.length === 0) {
+                    log('⚠ No hay productos.', 'warn');
+                    return;
+                }
+
+                const producto = productManager.obtenerProductoPorId(productos[0].id);
+                log(`Stock disponible: ${producto.inventario.cantidad} unidades`, 'info');
+
+                const salida = movementManager.registrarSalida({
+                    productoId: productos[0].id,
+                    cantidad: 5,
+                    razon: 'VENTA_CLIENTE',
+                    usuario: 'vendedor_juan',
+                    referencia: {
+                        ticket: 'TKT-' + Math.floor(Math.random() * 9000 + 1000),
+                        cliente: 'Empresa XYZ'
+                    }
+                });
+
+                log(`✓ Venta registrada exitosamente`, 'success');
+                log(`  ID: ${salida.id}`, 'info');
+                log(`  Cantidad: -${salida.cantidad} unidades`, 'info');
+                const actualizadoPost = productManager.obtenerProductoPorId(productos[0].id);
+                log(`  Nuevo stock: ${actualizadoPost.inventario.cantidad}`, 'success');
+            } catch (error) {
+                log(`✗ Error: ${error.message}`, 'error');
+            }
+
+            log('---', 'info');
+        }
+
+        /**
+         * SALIDA: Merma
+         */
+        function salidaMermaDemo() {
+            log('=== Salida: Merma/Deterioro ===', 'info');
+            
+            try {
+                const productos = productManager.obtenerProductos();
+                if (productos.length === 0) {
+                    log('⚠ No hay productos.', 'warn');
+                    return;
+                }
+
+                const salida = movementManager.registrarSalida({
+                    productoId: productos[0].id,
+                    cantidad: 1,
+                    razon: 'MERMA_DETERIORO',
+                    usuario: 'supervisor_almacen',
+                    detalles: 'Unidad dañada por fallo de voltaje'
+                });
+
+                log(`✓ Merma registrada`, 'success');
+                log(`  Producto: ${productos[0].nombre}`, 'info');
+                log(`  Cantidad: -${salida.cantidad} unidades`, 'info');
+                const actualizado = productManager.obtenerProductoPorId(productos[0].id);
+                log(`  Nuevo stock: ${actualizado.inventario.cantidad}`, 'success');
+            } catch (error) {
+                log(`✗ Error: ${error.message}`, 'error');
+            }
+
+            log('---', 'info');
+        }
+
+        /**
+         * TEST: Venta sin stock (Early Return activa)
+         */
+        function testSinStock() {
+            log('=== TEST: Intentar venta SIN STOCK ===', 'warn');
+            log('Simulando intento de venta cuando no hay stock...', 'info');
+            
+            try {
+                const productos = productManager.obtenerProductos();
+                if (productos.length === 0) {
+                    log('⚠ No hay productos.', 'warn');
+                    return;
+                }
+
+                // Agotar stock primero
+                const producto = productManager.obtenerProductoPorId(productos[0].id);
+                const stockActual = producto.inventario.cantidad;
+                log(`Stock actual: ${stockActual} unidades`, 'info');
+
+                if (stockActual > 0) {
+                    // Hacer salida de todo el stock
+                    movementManager.registrarSalida({
+                        productoId: productos[0].id,
+                        cantidad: stockActual,
+                        razon: 'VENTA_CLIENTE',
+                        usuario: 'vendedor_test'
+                    });
+                    log(`Vaciamos el stock (${stockActual} unidades vendidas)`, 'info');
+                }
+
+                // Ahora intentar vender cuando no hay
+                log('', 'info');
+                log('Intentando vender 5 unidades cuando stock = 0...', 'warn');
+                movementManager.registrarSalida({
+                    productoId: productos[0].id,
+                    cantidad: 5,  // ← Más de lo disponible
+                    razon: 'VENTA_CLIENTE',
+                    usuario: 'vendedor_test'
+                });
+
+            } catch (error) {
+                log(`🔴 ERROR CAPTURADO (Early Return) ↓`, 'error');
+                log(`   ${error.message}`, 'error');
+                log('', 'error');
+                log('✓ La validación Early Return funcionó correctamente', 'success');
+                log('   Detiene la ejecución ANTES de procesar la venta', 'info');
+            }
+
+            log('---', 'info');
+        }
+
+        /**
+         * TEST: Razón inválida
+         */
+        function testValidacionRazon() {
+            log('=== TEST: Razón de movimiento inválida ===', 'warn');
+            
+            try {
+                const productos = productManager.obtenerProductos();
+                if (productos.length === 0) {
+                    log('⚠ No hay productos.', 'warn');
+                    return;
+                }
+
+                log('Intentando registrar salida con razón inválida...', 'info');
+                log('  razon: "RAZON_INEXISTENTE"', 'warn');
+                
+                movementManager.registrarSalida({
+                    productoId: productos[0].id,
+                    cantidad: 1,
+                    razon: 'RAZON_INEXISTENTE',  // ← Inválido
+                    usuario: 'vendedor_test'
+                });
+
+            } catch (error) {
+                log(`🔴 ERROR CAPTURADO (Early Return) ↓`, 'error');
+                log(`   ${error.message}`, 'error');
+                log('', 'error');
+                log('✓ Validación de razón funcionó', 'success');
+            }
+
+            log('---', 'info');
+        }
+
+        /**
+         * Ver Estadísticas
+         */
+        function verEstadisticasDemo() {
+            log('=== Estadísticas de Movimientos ===', 'info');
+            
+            const stats = movementManager.obtenerEstadisticas();
+            
+            log(`Total de movimientos: ${stats.totalMovimientos}`, 'info');
+            log(`  Entradas: ${stats.totalEntradas} | Salidas: ${stats.totalSalidas}`, 'info');
+            log(`Unidades:`, 'info');
+            log(`  Entrada: +${stats.unidadesEntradas} | Salida: -${stats.unidadesSalidas}`, 'info');
+            log(`  Balance neto: ${stats.balanceNeto} unidades`, 'success');
+            log(`Razones más comunes:`, 'info');
+            
+            if (Object.keys(stats.razonesEntrada).length > 0) {
+                log(`  Entradas:`, 'info');
+                Object.entries(stats.razonesEntrada).forEach(([razon, cantidad]) => {
+                    log(`    • ${razon}: ${cantidad} unidades`, 'info');
+                });
+            }
+            
+            if (Object.keys(stats.razonesSalida).length > 0) {
+                log(`  Salidas:`, 'info');
+                Object.entries(stats.razonesSalida).forEach(([razon, cantidad]) => {
+                    log(`    • ${razon}: ${cantidad} unidades`, 'info');
+                });
+            }
+
+            log(`Usuarios activos: ${stats.usuariosActivos.join(', ')}`, 'info');
+
+            log('---', 'info');
+        }
+
+        /**
+         * Ver Historial
+         */
+        function verHistorialDemo() {
+            log('=== Historial de Stock ===', 'info');
+            
+            const productos = productManager.obtenerProductos();
+            if (productos.length === 0) {
+                log('No hay productos con historial.', 'warn');
+                return;
+            }
+
+            const historial = movementManager.obtenerHistorialStock(productos[0].id);
+            
+            if (historial.length === 0) {
+                log('Sin movimientos registrados.', 'warn');
+            } else {
+                log(`${historial.length} movimientos registrados:`, 'info');
+                historial.forEach((h, idx) => {
+                    const signo = h.tipo === 'ENTRADA' ? '+' : '-';
+                    const color = h.tipo === 'ENTRADA' ? 'success' : 'warn';
+                    const fecha = new Date(h.fecha).toLocaleTimeString();
+                    
+                    log(`${idx + 1}. [${fecha}] ${h.tipo}`, 'info');
+                    log(`   ${signo}${h.cantidad} unidades | Razón: ${h.razon}`, color);
+                    log(`   Stock resultante: ${h.stockResultante} unidades`, 'info');
+                });
+            }
+
+            log('---', 'info');
+        }
+
+        /**
+         * Limpiar consola
+         */
+        function limpiarConsolaDemo() {
+            consoleElement.innerHTML = '';
+            logCount = 0;
+            log('Consola limpiada ✓', 'info');
+        }
+
+        /**
+         * Inicializar en load
+         */
+        window.addEventListener('load', () => {
+            log('=== MovementManager Demo ===', 'info');
+            log('Sistema listo para usar.', 'success');
+            log('Haz clic en "Iniciar" para crear un producto de prueba.', 'info');
+            log('---', 'info');
+        });
+    </script>
+
+    <!-- Incluir managers -->
+    <script src="js/productManager.js"></script>
+    <script src="js/movementManager.js"></script>
+</body>
+</html>

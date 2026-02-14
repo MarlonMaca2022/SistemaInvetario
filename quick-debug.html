@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Debug - Login</title>
+    <style>
+        body { font-family: monospace; background: #1a1a1a; color: #fff; padding: 20px; }
+        div { margin: 10px 0; padding: 10px; background: #2a2a2a; border-left: 3px solid #3b82f6; }
+        .ok { border-left-color: #10b981; }
+        .error { border-left-color: #ef4444; }
+        button { padding: 10px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Quick Debug</h1>
+    
+    <div id="status"></div>
+    
+    <h2>Test Manual</h2>
+    <input id="usuario" value="admin" placeholder="usuario" style="padding: 5px;">
+    <input id="password" value="admin123" type="password" placeholder="password" style="padding: 5px;">
+    <button onclick="testLogin()">Test login()</button>
+    <button onclick="testForm()">Test form submit</button>
+    
+    <div id="log"></div>
+
+    <!-- Scripts -->
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+
+    <script>
+        const logDiv = document.getElementById('log');
+        const statusDiv = document.getElementById('status');
+        
+        function log(msg, type = 'log') {
+            const el = document.createElement('div');
+            el.className = type === 'error' ? 'error' : type === 'ok' ? 'ok' : '';
+            el.textContent = msg;
+            logDiv.appendChild(el);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            log('✅ DOMContentLoaded');
+            updateStatus();
+        });
+
+        function updateStatus() {
+            let html = '';
+            html += `<div class="${typeof authManager !== 'undefined' ? 'ok' : 'error'}">authManager: ${typeof authManager !== 'undefined' ? '✅' : '❌'}</div>`;
+            html += `<div class="${typeof uiManager !== 'undefined' ? 'ok' : 'error'}">uiManager: ${typeof uiManager !== 'undefined' ? '✅' : '❌'}</div>`;
+            html += `<div class="${typeof app !== 'undefined' ? 'ok' : 'error'}">app: ${typeof app !== 'undefined' ? '✅' : '❌'}</div>`;
+            
+            const form = document.getElementById('formLogin');
+            html += `<div class="${form ? 'ok' : 'error'}">formLogin: ${form ? '✅' : '❌'}</div>`;
+            
+            const auth = authManager?.estaAutenticado() ? 'autenticado' : 'no autenticado';
+            html += `<div>Estado: ${auth}</div>`;
+            
+            statusDiv.innerHTML = html;
+        }
+
+        function testLogin() {
+            const user = document.getElementById('usuario').value;
+            const pass = document.getElementById('password').value;
+            log(`Llamando authManager.login('${user}', '${pass}')...`);
+            
+            try {
+                const result = authManager.login(user, pass);
+                log(`Resultado: ${JSON.stringify(result)}`, result.success ? 'ok' : 'error');
+                updateStatus();
+                
+                if (result.success) {
+                    setTimeout(() => authManager.logout(), 1000);
+                }
+            } catch(err) {
+                log(`ERROR: ${err.message}`, 'error');
+            }
+        }
+
+        function testForm() {
+            const form = document.getElementById('formLogin');
+            if (!form) {
+                log('ERROR: formLogin no existe', 'error');
+                return;
+            }
+            
+            const userInput = document.getElementById('loginUsername');
+            const passInput = document.getElementById('loginPassword');
+            
+            if (!userInput || !passInput) {
+                log('ERROR: Inputs no existen', 'error');
+                return;
+            }
+            
+            userInput.value = document.getElementById('usuario').value;
+            passInput.value = document.getElementById('password').value;
+            log('Campos llenados, despachando submit...');
+            
+            form.dispatchEvent(new Event('submit', { bubbles: true }));
+        }
+
+        setInterval(updateStatus, 1000);
+    </script>
+</body>
+</html>

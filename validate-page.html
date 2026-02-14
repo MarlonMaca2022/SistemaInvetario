@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validación de Autenticación</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-gray-100">
+    <div class="container mx-auto p-8">
+        <h1 class="text-3xl font-bold mb-8">🧪 Validación del Sistema de Autenticación</h1>
+        
+        <div class="bg-gray-800 rounded-lg p-6 mb-6">
+            <p class="mb-4">Abre la consola (F12) para ver los resultados de las pruebas.</p>
+            <p class="text-yellow-400">⚠️ Los logs aparecerán en la consola del navegador.</p>
+        </div>
+
+        <div id="results" class="space-y-4">
+            <p class="text-gray-400">Cargando scripts...</p>
+        </div>
+    </div>
+
+    <!-- Scripts en orden -->
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+    
+    <!-- Script de validación -->
+    <script src="js/validate-auth.js"></script>
+
+    <script>
+        // Mostrar en la página los resultados
+        document.addEventListener('DOMContentLoaded', () => {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `
+                <div class="bg-green-800 p-4 rounded">
+                    <p class="font-bold text-green-300">✅ Página cargada correctamente</p>
+                    <p class="text-sm mt-2">Abre la consola del navegador (F12) para ver los resultados de las pruebas de autenticación.</p>
+                </div>
+                <div class="bg-blue-800 p-4 rounded">
+                    <p class="font-bold text-blue-300">📊 Estado del Sistema</p>
+                    <p class="text-sm mt-2">
+                        <span class="block">• authManager: ${typeof authManager !== 'undefined' ? '✅' : '❌'}</span>
+                        <span class="block">• dataManager: ${typeof dataManager !== 'undefined' ? '✅' : '❌'}</span>
+                        <span class="block">• uiManager: ${typeof uiManager !== 'undefined' ? '✅' : '❌'}</span>
+                        <span class="block">• app: ${typeof app !== 'undefined' ? '✅' : '❌'}</span>
+                        <span class="block">• Autenticado: ${authManager?.estaAutenticado() ? '❌ (tiene sesión)' : '✅ (sin sesión - correcto)'}</span>
+                    </p>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>

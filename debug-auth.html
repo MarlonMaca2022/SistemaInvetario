@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug - Autenticación</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Courier New', monospace; font-size: 12px; }
+        .log { margin: 5px 0; padding: 5px; border-left: 3px solid #3b82f6; }
+        .error { border-left-color: #ef4444; color: #ef4444; }
+        .success { border-left-color: #10b981; color: #10b981; }
+        .info { border-left-color: #f59e0b; color: #f59e0b; }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 p-4">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-2xl font-bold mb-4">🔍 Debug - Sistema de Autenticación</h1>
+        
+        <div class="grid grid-cols-2 gap-4 mb-4">
+            <div class="bg-gray-800 p-4 rounded">
+                <h2 class="font-bold mb-2">Estado</h2>
+                <div id="estado" class="space-y-1">
+                    <p>Cargando...</p>
+                </div>
+            </div>
+            <div class="bg-gray-800 p-4 rounded">
+                <h2 class="font-bold mb-2">Acciones</h2>
+                <div class="space-y-2">
+                    <button onclick="testLogin()" class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm">Test Login Admin</button>
+                    <button onclick="testLoginEmp()" class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-sm">Test Login Empleado</button>
+                    <button onclick="testLogout()" class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-sm">Test Logout</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-gray-800 p-4 rounded">
+            <h2 class="font-bold mb-2">Logs de Consola</h2>
+            <div id="logs" class="space-y-1 max-h-96 overflow-y-auto bg-gray-900 p-2 rounded"></div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+
+    <script>
+        const logDiv = document.getElementById('logs');
+        const estadoDiv = document.getElementById('estado');
+
+        // Capturar logs
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+
+        function addLog(type, args) {
+            const msg = args.map(a => {
+                if (typeof a === 'string') return a.replace(/%c/g, '');
+                return String(a);
+            }).join(' ');
+            
+            const logEl = document.createElement('div');
+            logEl.className = `log ${type}`;
+            logEl.textContent = `[${type.toUpperCase()}] ${msg}`;
+            logDiv.appendChild(logEl);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        console.log = function(...args) {
+            addLog('log', args);
+            originalLog.apply(console, args);
+        };
+
+        console.error = function(...args) {
+            addLog('error', args);
+            originalError.apply(console, args);
+        };
+
+        console.warn = function(...args) {
+            addLog('warn', args);
+            originalWarn.apply(console, args);
+        };
+
+        // Actualizar estado
+        function updateStatus() {
+            let html = '';
+            html += `<p><span class="text-gray-400">authManager:</span> ${typeof authManager !== 'undefined' ? '✅' : '❌'}</p>`;
+            html += `<p><span class="text-gray-400">Autenticado:</span> ${authManager?.estaAutenticado() ? '✅' : '❌'}</p>`;
+            if (authManager?.estaAutenticado()) {
+                const info = authManager.obtenerInfoSesion();
+                html += `<p><span class="text-gray-400">Usuario:</span> ${info.nombre} (${info.rol})</p>`;
+            }
+            html += `<p><span class="text-gray-400">UIManager:</span> ${typeof uiManager !== 'undefined' ? '✅' : '❌'}</p>`;
+            html += `<p><span class="text-gray-400">App:</span> ${typeof app !== 'undefined' ? '✅' : '❌'}</p>`;
+            html += `<p><span class="text-gray-400">Formulario:</span> ${document.getElementById('formLogin') ? '✅' : '❌'}</p>`;
+            estadoDiv.innerHTML = html;
+        }
+
+        // Funciones de test
+        function testLogin() {
+            console.log('📝 Intentando login con admin/admin123...');
+            const result = authManager.login('admin', 'admin123');
+            console.log('Resultado:', result);
+            updateStatus();
+        }
+
+        function testLoginEmp() {
+            console.log('📝 Intentando login con empleado/emp123...');
+            const result = authManager.login('empleado', 'emp123');
+            console.log('Resultado:', result);
+            updateStatus();
+        }
+
+        function testLogout() {
+            console.log('📝 Logout...');
+            authManager.logout();
+            console.log('Sesión cerrada');
+            updateStatus();
+        }
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('✨ Página de debug lista');
+            updateStatus();
+
+            // Verificar si el formulario de login tiene listeners
+            const formLogin = document.getElementById('formLogin');
+            if (formLogin) {
+                console.log('ℹ️ Formulario de login encontrado en el DOM');
+            }
+        });
+
+        setInterval(updateStatus, 1000);
+    </script>
+</body>
+</html>
